@@ -12,6 +12,8 @@ import { createRoot, ExpressionPickerStore, Menu, Toasts, useCallback, useEffect
 
 import managedStyle from "./styles.css?managed";
 
+// ─── Favorite Images Data Management ───
+
 const STORE_KEY = "FavoriteImages";
 let favoriteUrls = new Set<string>();
 
@@ -38,9 +40,8 @@ async function removeFavorite(url: string): Promise<void> {
     favoriteUrls.delete(url);
 }
 
-async function isFavorite(url: string): Promise<boolean> {
-    const favs = await getFavorites();
-    return favs.some(f => f.url === url);
+function isFavorite(url: string): boolean {
+    return favoriteUrls.has(url);
 }
 
 async function refreshFavoriteCache(): Promise<void> {
@@ -144,18 +145,8 @@ function HeartIcon({ width = 24, height = 24, filled = false }: { width?: number
 
 // ─── Context Menu Patches ───
 
-const imageContextMenuPatch: NavContextMenuPatchCallback = (children, props) => {
-    if (!props?.src) return;
-
-    const { src } = props;
-
-    children.push(
-        buildMenuItem(src)
-    );
-};
-
 function buildMenuItem(src: string) {
-    const isFav = favoriteUrls.has(src);
+    const isFav = isFavorite(src);
 
     return (
         <Menu.MenuGroup>
@@ -184,6 +175,16 @@ function buildMenuItem(src: string) {
         </Menu.MenuGroup>
     );
 }
+
+const imageContextMenuPatch: NavContextMenuPatchCallback = (children, props) => {
+    if (!props?.src) return;
+
+    const { src } = props;
+
+    children.push(
+        buildMenuItem(src)
+    );
+};
 
 const messageContextMenuPatch: NavContextMenuPatchCallback = (children, props) => {
     // For message context menus with image data
@@ -311,6 +312,8 @@ function hideFavoritesPanel() {
         (panel as HTMLElement).style.display = "none";
     }
 }
+
+// ─── Mutation Observer ───
 
 function startObserver() {
     observer = new MutationObserver(() => {
