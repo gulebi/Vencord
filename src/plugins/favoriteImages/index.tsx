@@ -137,7 +137,7 @@ function FavoriteImagesPanel() {
 
 function HeartIcon({ width = 24, height = 24, filled = false }: { width?: number; height?: number; filled?: boolean; }) {
     return (
-        <svg viewBox="0 0 24 24" width={width} height={height} fill={filled ? "#db61a2" : "none"} stroke={filled ? "#db61a2" : "currentColor"} strokeWidth="2">
+        <svg viewBox="0 0 24 24" width={width} height={height} fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
         </svg>
     );
@@ -153,7 +153,7 @@ function buildMenuItem(src: string) {
             <Menu.MenuItem
                 id="vc-fav-image-toggle"
                 label={isFav ? "Remove from Favorites" : "Add to Favorites"}
-                icon={() => <HeartIcon width={18} height={18} filled={isFav} />}
+                icon={() => <HeartIcon width={20} height={20} filled={isFav} />}
                 action={async () => {
                     if (isFav) {
                         await removeFavorite(src);
