@@ -29,7 +29,7 @@ async function getFavorites(): Promise<FavoriteImage[]> {
 async function addFavorite(url: string): Promise<void> {
     const favs = await getFavorites();
     if (favs.some(f => f.url === url)) return;
-    favs.push({ url, addedAt: Date.now() });
+    favs.unshift({ url, addedAt: Date.now() });
     await DataStore.set(STORE_KEY, favs);
     favoriteUrls.add(url);
 }
